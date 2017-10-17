@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Write a description of class Sorter here.
@@ -29,7 +30,7 @@ public class Sorter {
         for(int i = 0; i < wall; i++) {
             lowArray.add(inputArray.get(i));
         }
-        if(lowArray.size() > 1) {
+        if(lowArray.size() > 1 && lowArray.size() > Collections.frequency(lowArray, lowArray.get(0))) {
             lowArray = sorter.quicksort(lowArray);
         }
         
@@ -37,7 +38,7 @@ public class Sorter {
         for(int i = wall; i < inputArray.size(); i++) {
             highArray.add(inputArray.get(i));
         }
-        if(highArray.size() > 1) {
+        if(highArray.size() > 1 && highArray.size() > Collections.frequency(highArray, highArray.get(0))) {
             highArray = sorter.quicksort(highArray);
         }
         

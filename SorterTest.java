@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import static org.junit.Assert.*;
 import org.junit.After;
@@ -34,10 +35,17 @@ public class SorterTest {
         System.out.println();
         Sorter sorter = new Sorter();
         List<String> inputArray = new ArrayList<String>();
-        Random gen = new Random();
-        for(int i = 0; i < 10; i++) {
-            inputArray.add(Integer.toString(gen.nextInt(10)));
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter some strings to sort:\nEnter \"sort\" when finished");
+        while(true) {
+            String input = scanner.next();
+            if(input.compareTo("sort") == 0) {
+                break;
+            } else {
+                inputArray.add(input);
+            }
         }
+        
         System.out.println("inputArray: " + inputArray);
         List<String> outputArray = sorter.quicksort(inputArray);
         System.out.println("outputArray: " + outputArray);

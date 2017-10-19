@@ -5,8 +5,8 @@ import java.util.Collections;
 /**
  * Write a description of class Sorter here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Kieran Sutton
+ * @version 10/18/17
  */
 public class Sorter {
     public List<String> quicksort(List<String> inputArray) {

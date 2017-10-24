@@ -6,6 +6,9 @@ import java.awt.Label;
 import javax.swing.JButton;
 import javax.swing.AbstractButton;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
+import java.awt.Color;
 
 /**
  * Write a description of class Calc here.
@@ -13,9 +16,17 @@ import java.awt.event.ActionEvent;
  * @author Kieran Sutton
  * @version 10/19/17
  */
-public class Calc {
+public class Calc implements ActionListener{
     JFrame frame = new JFrame("RPNCalc");
     Label output = new Label();
+    LinkedList<Double> stack = new LinkedList<Double>();
+    String input = "";
+    boolean overwrite = false;
+    
+    public Calc() {
+        this.stack.push(0.0);
+        this.main();
+    }
     
     public void main() {
         frame.setLayout(new GridBagLayout());
@@ -25,6 +36,7 @@ public class Calc {
         constraints.insets = new Insets(2, 2, 2, 2);
         constraints.anchor = GridBagConstraints.CENTER;
         
+        this.output.setBackground(Color.WHITE);
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 4;
@@ -33,6 +45,7 @@ public class Calc {
         
         JButton buttonPlus = new JButton("+");
         buttonPlus.setHorizontalTextPosition(AbstractButton.CENTER);
+        buttonPlus.addActionListener(this);
         buttonPlus.setActionCommand("+");
         constraints.gridx = 0;
         constraints.gridy = 1;
@@ -42,6 +55,7 @@ public class Calc {
         
         JButton buttonMinus = new JButton("-");
         buttonMinus.setHorizontalTextPosition(AbstractButton.CENTER);
+        buttonMinus.addActionListener(this);
         buttonMinus.setActionCommand("-");
         constraints.gridx = 1;
         constraints.gridy = 1;
@@ -51,6 +65,7 @@ public class Calc {
         
         JButton buttonMultiply = new JButton("*");
         buttonMultiply.setHorizontalTextPosition(AbstractButton.CENTER);
+        buttonMultiply.addActionListener(this);
         buttonMultiply.setActionCommand("*");
         constraints.gridx = 2;
         constraints.gridy = 1;
@@ -60,6 +75,7 @@ public class Calc {
         
         JButton buttonDivide = new JButton("/");
         buttonDivide.setHorizontalTextPosition(AbstractButton.CENTER);
+        buttonDivide.addActionListener(this);
         buttonDivide.setActionCommand("/");
         constraints.gridx = 3;
         constraints.gridy = 1;
@@ -69,7 +85,8 @@ public class Calc {
         
         JButton buttonEnter = new JButton("↵");
         buttonEnter.setHorizontalTextPosition(AbstractButton.CENTER);
-        buttonEnter.setActionCommand("↵");
+        buttonEnter.addActionListener(this);
+        buttonEnter.setActionCommand("Enter");
         constraints.gridx = 3;
         constraints.gridy = 4;
         constraints.gridwidth = 1;
@@ -80,6 +97,7 @@ public class Calc {
         
         JButton buttonClear = new JButton("C");
         buttonClear.setHorizontalTextPosition(AbstractButton.CENTER);
+        buttonClear.addActionListener(this);
         buttonClear.setActionCommand("C");
         constraints.gridx = 3;
         constraints.gridy = 2;
@@ -89,7 +107,8 @@ public class Calc {
         
         JButton buttonBackspace = new JButton("←");
         buttonBackspace.setHorizontalTextPosition(AbstractButton.CENTER);
-        buttonBackspace.setActionCommand("←");
+        buttonBackspace.addActionListener(this);
+        buttonBackspace.setActionCommand("Back");
         constraints.gridx = 3;
         constraints.gridy = 3;
         constraints.gridwidth = 1;
@@ -98,6 +117,7 @@ public class Calc {
         
         JButton buttonNegative = new JButton("-");
         buttonNegative.setHorizontalTextPosition(AbstractButton.CENTER);
+        buttonNegative.addActionListener(this);
         buttonNegative.setActionCommand("Neg");
         constraints.gridx = 2;
         constraints.gridy = 5;
@@ -107,6 +127,7 @@ public class Calc {
         
         JButton buttonDecimal = new JButton(".");
         buttonDecimal.setHorizontalTextPosition(AbstractButton.CENTER);
+        buttonDecimal.addActionListener(this);
         buttonDecimal.setActionCommand(".");
         constraints.gridx = 1;
         constraints.gridy = 5;
@@ -116,6 +137,7 @@ public class Calc {
         
         JButton button0 = new JButton("0");
         button0.setHorizontalTextPosition(AbstractButton.CENTER);
+        button0.addActionListener(this);
         button0.setActionCommand("0");
         constraints.gridx = 0;
         constraints.gridy = 5;
@@ -125,6 +147,7 @@ public class Calc {
         
         JButton button1 = new JButton("1");
         button1.setHorizontalTextPosition(AbstractButton.CENTER);
+        button1.addActionListener(this);
         button1.setActionCommand("1");
         constraints.gridx = 0;
         constraints.gridy = 4;
@@ -134,6 +157,7 @@ public class Calc {
         
         JButton button2 = new JButton("2");
         button2.setHorizontalTextPosition(AbstractButton.CENTER);
+        button2.addActionListener(this);
         button2.setActionCommand("2");
         constraints.gridx = 1;
         constraints.gridy = 4;
@@ -143,6 +167,7 @@ public class Calc {
         
         JButton button3 = new JButton("3");
         button3.setHorizontalTextPosition(AbstractButton.CENTER);
+        button3.addActionListener(this);
         button3.setActionCommand("3");
         constraints.gridx = 2;
         constraints.gridy = 4;
@@ -152,6 +177,7 @@ public class Calc {
         
         JButton button4 = new JButton("4");
         button4.setHorizontalTextPosition(AbstractButton.CENTER);
+        button4.addActionListener(this);
         button4.setActionCommand("4");
         constraints.gridx = 0;
         constraints.gridy = 3;
@@ -161,6 +187,7 @@ public class Calc {
         
         JButton button5 = new JButton("5");
         button5.setHorizontalTextPosition(AbstractButton.CENTER);
+        button5.addActionListener(this);
         button5.setActionCommand("5");
         constraints.gridx = 1;
         constraints.gridy = 3;
@@ -170,6 +197,7 @@ public class Calc {
         
         JButton button6 = new JButton("6");
         button6.setHorizontalTextPosition(AbstractButton.CENTER);
+        button6.addActionListener(this);
         button6.setActionCommand("6");
         constraints.gridx = 2;
         constraints.gridy = 3;
@@ -179,6 +207,7 @@ public class Calc {
         
         JButton button7 = new JButton("7");
         button7.setHorizontalTextPosition(AbstractButton.CENTER);
+        button7.addActionListener(this);
         button7.setActionCommand("7");
         constraints.gridx = 0;
         constraints.gridy = 2;
@@ -188,6 +217,7 @@ public class Calc {
         
         JButton button8 = new JButton("8");
         button8.setHorizontalTextPosition(AbstractButton.CENTER);
+        button8.addActionListener(this);
         button8.setActionCommand("8");
         constraints.gridx = 1;
         constraints.gridy = 2;
@@ -197,6 +227,7 @@ public class Calc {
         
         JButton button9 = new JButton("9");
         button9.setHorizontalTextPosition(AbstractButton.CENTER);
+        button9.addActionListener(this);
         button9.setActionCommand("9");
         constraints.gridx = 2;
         constraints.gridy = 2;
@@ -211,15 +242,79 @@ public class Calc {
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
         switch(command) {
-            case "+": this.calcCommand("+"); break;
-            case "-": this.calcCommand("-"); break;
-            case "*": this.calcCommand("*"); break;
-            case "/": this.calcCommand("/"); break;
+            case "+": this.calcPlus(); break;
+            case "-": this.calcMinus(); break;
+            case "*": this.calcMultiply(); break;
+            case "/": this.calcDivide(); break;
             case "Enter": this.calcEnter(); break;
             case "C": this.calcClear(); break;
-            case "←": this.calcBack(); break;
+            case "Back": this.calcBack(); break;
             case "Neg": this.calcNeg(); break;
-            default: this.calcLabel(command); break;
+            default: this.calcCommand(command); break;
         }
+        this.calcUpdate();
+    }
+    
+    public void calcPlus() {
+        this.stack.push(Double.parseDouble(this.input) + this.stack.pop());
+        this.input = Double.toString(this.stack.get(0));
+        this.overwrite = true;
+    }
+    
+    public void calcMinus() {
+        this.stack.push(this.stack.pop() - Double.parseDouble(this.input));
+        this.input = Double.toString(this.stack.get(0));
+        this.overwrite = true;
+    }
+    
+    public void calcMultiply() {
+        this.stack.push(Double.parseDouble(this.input) * this.stack.pop());
+        this.input = Double.toString(this.stack.get(0));
+        this.overwrite = true;
+    }
+    
+    public void calcDivide() {
+        this.stack.push(Double.parseDouble(this.input) / this.stack.pop());
+        this.input = Double.toString(this.stack.get(0));
+        this.overwrite = true;
+    }
+    
+    public void calcEnter() {
+        this.stack.push(Double.parseDouble(this.input));
+        this.overwrite = true;
+    }
+    
+    public void calcClear() {
+        this.stack = new LinkedList<Double>();
+        this.stack.push(0.0);
+        this.input = "";
+    }
+    
+    public void calcBack() {
+        if (this.input.length() > 0) {
+            this.input = this.input.substring(0, this.input.length() - 1);
+        } else {
+            this.input = "";
+        }
+    }
+    
+    public void calcNeg() {
+        if (this.input.substring(0,1).compareTo("-") == 0) {
+            this.input = this.input.substring(1, this.input.length());
+        } else {
+            this.input = "-" + this.input;
+        }
+    }
+    
+    public void calcCommand(String command) {
+        if (this.overwrite) {
+            this.input = "";
+            this.overwrite = false;
+        }
+        this.input += command;
+    }
+    
+    public void calcUpdate() {
+        this.output.setText(this.input);
     }
 }

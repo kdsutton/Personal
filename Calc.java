@@ -25,10 +25,7 @@ public class Calc implements ActionListener{
     
     public Calc() {
         this.stack.push(0.0);
-        this.main();
-    }
-    
-    public void main() {
+        
         frame.setLayout(new GridBagLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GridBagConstraints constraints = new GridBagConstraints();

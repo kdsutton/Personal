@@ -43,11 +43,11 @@ public class Sorter {
         }
         
         List<String> outputArray = new ArrayList<String>();
-        for(int i = 0; i < lowArray.size(); i++) {
-            outputArray.add(lowArray.get(i));
+        for(String value : lowArray) {
+            outputArray.add(value);
         }
-        for(int i = 0; i < highArray.size(); i++) {
-            outputArray.add(highArray.get(i));
+        for(String value : highArray) {
+            outputArray.add(value);
         }
         
         return outputArray;

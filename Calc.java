@@ -7,7 +7,7 @@ import javax.swing.JButton;
 import javax.swing.AbstractButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
+import java.util.Stack;
 import java.awt.Color;
 
 /**
@@ -19,7 +19,7 @@ import java.awt.Color;
 public class Calc implements ActionListener{
     JFrame frame = new JFrame("RPNCalc");
     Label output = new Label();
-    LinkedList<Double> stack = new LinkedList<Double>();
+    Stack<Double> stack = new Stack<Double>();
     String input = "";
     boolean overwrite = false;
     
@@ -282,7 +282,7 @@ public class Calc implements ActionListener{
     }
     
     public void calcClear() {
-        this.stack = new LinkedList<Double>();
+        this.stack = new Stack<Double>();
         this.stack.push(0.0);
         this.input = "";
     }

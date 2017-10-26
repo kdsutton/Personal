@@ -7,25 +7,25 @@ import javax.swing.JButton;
 import javax.swing.AbstractButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Stack;
 import java.awt.Color;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
- * Write a description of class Calc here.
+ * A Reverse Polish Notation Calculator
  *
  * @author Kieran Sutton
  * @version 10/19/17
  */
-public class Calc implements ActionListener{
-    JFrame frame = new JFrame("RPNCalc");
+public class NormCalc implements ActionListener{
+    JFrame frame = new JFrame("NormCalc");
     Label output = new Label();
-    Stack<Double> stack = new Stack<Double>();
+    List<String> operations = new ArrayList<String>();
+    int currentIndex = 0;
     String input = "";
     boolean overwrite = false;
     
-    public Calc() {
-        this.stack.push(0.0);
-        
+    public NormCalc() {
         frame.setLayout(new GridBagLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GridBagConstraints constraints = new GridBagConstraints();
@@ -80,10 +80,10 @@ public class Calc implements ActionListener{
         constraints.gridheight = 1;
         frame.add(buttonDivide, constraints);
         
-        JButton buttonEnter = new JButton("↵");
+        JButton buttonEnter = new JButton("=");
         buttonEnter.setHorizontalTextPosition(AbstractButton.CENTER);
         buttonEnter.addActionListener(this);
-        buttonEnter.setActionCommand("Enter");
+        buttonEnter.setActionCommand("=");
         constraints.gridx = 3;
         constraints.gridy = 4;
         constraints.gridwidth = 1;
@@ -239,11 +239,11 @@ public class Calc implements ActionListener{
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
         switch(command) {
-            case "+": this.calcPlus(); break;
-            case "-": this.calcMinus(); break;
-            case "*": this.calcMultiply(); break;
-            case "/": this.calcDivide(); break;
-            case "Enter": this.calcEnter(); break;
+            case "+": this.calcOperator("+"); break;
+            case "-": this.calcOperator("-"); break;
+            case "*": this.calcOperator("*"); break;
+            case "/": this.calcOperator("/"); break;
+            case "=": this.calcEquals(); break;
             case "C": this.calcClear(); break;
             case "Back": this.calcBack(); break;
             case "Neg": this.calcNeg(); break;
@@ -252,38 +252,42 @@ public class Calc implements ActionListener{
         this.calcUpdate();
     }
     
-    public void calcPlus() {
-        this.stack.push(Double.parseDouble(this.input) + this.stack.pop());
-        this.input = Double.toString(this.stack.get(0));
-        this.overwrite = true;
+    public void calcOperator(String operator) {
+        this.operations.add(this.input.substring(this.currentIndex, this.input.length()));
+        this.operations.add(operator);
+        this.calcCommand(operator);
+        this.currentIndex = this.input.length();
     }
     
-    public void calcMinus() {
-        this.stack.push(this.stack.pop() - Double.parseDouble(this.input));
-        this.input = Double.toString(this.stack.get(0));
-        this.overwrite = true;
-    }
-    
-    public void calcMultiply() {
-        this.stack.push(Double.parseDouble(this.input) * this.stack.pop());
-        this.input = Double.toString(this.stack.get(0));
-        this.overwrite = true;
-    }
-    
-    public void calcDivide() {
-        this.stack.push(Double.parseDouble(this.input) / this.stack.pop());
-        this.input = Double.toString(this.stack.get(0));
-        this.overwrite = true;
-    }
-    
-    public void calcEnter() {
-        this.stack.push(Double.parseDouble(this.input));
-        this.overwrite = true;
+    public void calcEquals() {
+        int index;
+        while(true) {
+            int indexMultiply = this.operations.indexOf("*");
+            int indexDivide = this.operations.indexOf("/");
+            boolean isMultiply;
+            if(indexMultiply < indexDivide) {
+                index = indexMultiply;
+                isMultiply = true;
+            } else {
+                index = indexDivide;
+                isMultiply = false;
+            }
+            
+            if(index == -1) {
+                break;
+            }
+            
+            double operand1 = Double.parseDouble(this.operations.get(index - 1));
+            double operand2 = Double.parseDouble(this.operations.get(index + 1));
+            if(isMultiply) {
+                this.operations.set(index, Double.toString(operand1 * operand2));
+            } else {
+                this.operations.set(index, Double.toString(operand1 / operand2));
+            }
+        }
     }
     
     public void calcClear() {
-        this.stack = new Stack<Double>();
-        this.stack.push(0.0);
         this.input = "";
     }
     
@@ -296,7 +300,7 @@ public class Calc implements ActionListener{
     }
     
     public void calcNeg() {
-        if (this.input.substring(0,1).compareTo("-") == 0) {
+        if (this.input.charAt(0) == '-') {
             this.input = this.input.substring(1, this.input.length());
         } else {
             this.input = "-" + this.input;

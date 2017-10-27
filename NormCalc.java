@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A Reverse Polish Notation Calculator
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 public class NormCalc implements ActionListener{
     JFrame frame = new JFrame("NormCalc");
     Label output = new Label();
-    List<String> operations = new ArrayList<String>();
     int currentIndex = 0;
     String input = "";
     boolean overwrite = false;
@@ -43,7 +43,7 @@ public class NormCalc implements ActionListener{
         JButton buttonPlus = new JButton("+");
         buttonPlus.setHorizontalTextPosition(AbstractButton.CENTER);
         buttonPlus.addActionListener(this);
-        buttonPlus.setActionCommand("+");
+        buttonPlus.setActionCommand(" + ");
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -53,7 +53,7 @@ public class NormCalc implements ActionListener{
         JButton buttonMinus = new JButton("-");
         buttonMinus.setHorizontalTextPosition(AbstractButton.CENTER);
         buttonMinus.addActionListener(this);
-        buttonMinus.setActionCommand("-");
+        buttonMinus.setActionCommand(" - ");
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -63,7 +63,7 @@ public class NormCalc implements ActionListener{
         JButton buttonMultiply = new JButton("*");
         buttonMultiply.setHorizontalTextPosition(AbstractButton.CENTER);
         buttonMultiply.addActionListener(this);
-        buttonMultiply.setActionCommand("*");
+        buttonMultiply.setActionCommand(" * ");
         constraints.gridx = 2;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -73,7 +73,7 @@ public class NormCalc implements ActionListener{
         JButton buttonDivide = new JButton("/");
         buttonDivide.setHorizontalTextPosition(AbstractButton.CENTER);
         buttonDivide.addActionListener(this);
-        buttonDivide.setActionCommand("/");
+        buttonDivide.setActionCommand(" / ");
         constraints.gridx = 3;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -239,10 +239,6 @@ public class NormCalc implements ActionListener{
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
         switch(command) {
-            case "+": this.calcOperator("+"); break;
-            case "-": this.calcOperator("-"); break;
-            case "*": this.calcOperator("*"); break;
-            case "/": this.calcOperator("/"); break;
             case "=": this.calcEquals(); break;
             case "C": this.calcClear(); break;
             case "Back": this.calcBack(); break;
@@ -252,18 +248,13 @@ public class NormCalc implements ActionListener{
         this.calcUpdate();
     }
     
-    public void calcOperator(String operator) {
-        this.operations.add(this.input.substring(this.currentIndex, this.input.length()));
-        this.operations.add(operator);
-        this.calcCommand(operator);
-        this.currentIndex = this.input.length();
-    }
-    
     public void calcEquals() {
+        List<String> operations = new ArrayList<String>(Arrays.asList(input.split("\\s")));
+        
         int index;
         while(true) {
-            int indexMultiply = this.operations.indexOf("*");
-            int indexDivide = this.operations.indexOf("/");
+            int indexMultiply = operations.indexOf("*");
+            int indexDivide = operations.indexOf("/");
             boolean isMultiply;
             if(indexMultiply < indexDivide) {
                 index = indexMultiply;
@@ -277,12 +268,12 @@ public class NormCalc implements ActionListener{
                 break;
             }
             
-            double operand1 = Double.parseDouble(this.operations.get(index - 1));
-            double operand2 = Double.parseDouble(this.operations.get(index + 1));
+            double operand1 = Double.parseDouble(operations.get(index - 1));
+            double operand2 = Double.parseDouble(operations.get(index + 1));
             if(isMultiply) {
-                this.operations.set(index, Double.toString(operand1 * operand2));
+                operations.set(index, Double.toString(operand1 * operand2));
             } else {
-                this.operations.set(index, Double.toString(operand1 / operand2));
+                operations.set(index, Double.toString(operand1 / operand2));
             }
         }
     }
@@ -300,11 +291,21 @@ public class NormCalc implements ActionListener{
     }
     
     public void calcNeg() {
-        if (this.input.charAt(0) == '-') {
-            this.input = this.input.substring(1, this.input.length());
-        } else {
-            this.input = "-" + this.input;
+        int index = this.input.length() - 1;
+        while(this.input.charAt(index) != ' ') {
+            index--;
         }
+        index++;
+        if(index == this.input.length()) {
+            this.input += "-";
+        } else {
+            if(this.input.charAt(index) == '-') {
+                this.input = this.input.substring(0, index) + this.input.substring(index + 1, this.input.length() - 1);
+            } else {
+                this.input = this.input.substring(0, index) + "-" + this.input.substring(index, this.input.length() - 1);
+            }
+        }
+        //this will not work because of operaters, make sure to fix that
     }
     
     public void calcCommand(String command) {

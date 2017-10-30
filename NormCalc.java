@@ -115,7 +115,7 @@ public class NormCalc implements ActionListener{
         JButton buttonNegative = new JButton("-");
         buttonNegative.setHorizontalTextPosition(AbstractButton.CENTER);
         buttonNegative.addActionListener(this);
-        buttonNegative.setActionCommand("Neg");
+        buttonNegative.setActionCommand("-");
         constraints.gridx = 2;
         constraints.gridy = 5;
         constraints.gridwidth = 1;
@@ -242,7 +242,6 @@ public class NormCalc implements ActionListener{
             case "=": this.calcEquals(); break;
             case "C": this.calcClear(); break;
             case "Back": this.calcBack(); break;
-            case "Neg": this.calcNeg(); break;
             default: this.calcCommand(command); break;
         }
         this.calcUpdate();
@@ -251,22 +250,23 @@ public class NormCalc implements ActionListener{
     public void calcEquals() {
         List<String> operations = new ArrayList<String>(Arrays.asList(input.split("\\s")));
         
-        int index;
         while(true) {
+            int index = -1;
             int indexMultiply = operations.indexOf("*");
             int indexDivide = operations.indexOf("/");
-            boolean isMultiply;
-            if(indexMultiply < indexDivide) {
-                index = indexMultiply;
-                isMultiply = true;
-            } else {
-                index = indexDivide;
-                isMultiply = false;
-            }
+            boolean isMultiply = false;
             
-            if(index == -1) {
+            if(indexMultiply != -1 && indexDivide != -1) {
+                if(indexMultiply < indexDivide) {
+                    index = indexMultiply;
+                    isMultiply = true;
+                } else {
+                    index = indexDivide;
+                }
+            } else {
                 break;
             }
+            
             
             double operand1 = Double.parseDouble(operations.get(index - 1));
             double operand2 = Double.parseDouble(operations.get(index + 1));
@@ -275,7 +275,40 @@ public class NormCalc implements ActionListener{
             } else {
                 operations.set(index, Double.toString(operand1 / operand2));
             }
+            operations.remove(index + 1);
+            operations.remove(index - 1);
         }
+        
+        while(true) {
+            int index = -1;
+            int indexPlus = operations.indexOf("+");
+            int indexMinus = operations.indexOf("-");
+            boolean isPlus = false;
+            
+            if(indexPlus != -1 && indexMinus != -1) {
+                if(indexPlus < indexMinus) {
+                    index = indexPlus;
+                    isPlus = true;
+                } else {
+                    index = indexMinus;
+                }
+            } else {
+                break;
+            }
+            
+            double operand1 = Double.parseDouble(operations.get(index - 1));
+            double operand2 = Double.parseDouble(operations.get(index + 1));
+            if(isPlus) {
+                operations.set(index, Double.toString(operand1 + operand2));
+            } else {
+                operations.set(index, Double.toString(operand1 - operand2));
+            }
+            operations.remove(index + 1);
+            operations.remove(index - 1);
+        }
+        
+        this.input = operations.get(0);
+        this.calcUpdate();
     }
     
     public void calcClear() {
@@ -284,28 +317,14 @@ public class NormCalc implements ActionListener{
     
     public void calcBack() {
         if (this.input.length() > 0) {
-            this.input = this.input.substring(0, this.input.length() - 1);
+            if(this.input.charAt(this.input.length() - 1) == ' ') {
+                this.input = this.input.substring(0, this.input.length() - 3);
+            } else {
+                this.input = this.input.substring(0, this.input.length() - 1);
+            }
         } else {
             this.input = "";
         }
-    }
-    
-    public void calcNeg() {
-        int index = this.input.length() - 1;
-        while(this.input.charAt(index) != ' ') {
-            index--;
-        }
-        index++;
-        if(index == this.input.length()) {
-            this.input += "-";
-        } else {
-            if(this.input.charAt(index) == '-') {
-                this.input = this.input.substring(0, index) + this.input.substring(index + 1, this.input.length() - 1);
-            } else {
-                this.input = this.input.substring(0, index) + "-" + this.input.substring(index, this.input.length() - 1);
-            }
-        }
-        //this will not work because of operaters, make sure to fix that
     }
     
     public void calcCommand(String command) {

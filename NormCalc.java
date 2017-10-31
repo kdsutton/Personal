@@ -23,7 +23,6 @@ public class NormCalc implements ActionListener{
     Label output = new Label();
     int currentIndex = 0;
     String input = "";
-    boolean overwrite = false;
     
     public NormCalc() {
         frame.setLayout(new GridBagLayout());
@@ -256,13 +255,11 @@ public class NormCalc implements ActionListener{
             int indexDivide = operations.indexOf("/");
             boolean isMultiply = false;
             
-            if(indexMultiply != -1 && indexDivide != -1) {
-                if(indexMultiply < indexDivide) {
-                    index = indexMultiply;
-                    isMultiply = true;
-                } else {
-                    index = indexDivide;
-                }
+            if(indexMultiply != -1 && (indexDivide == -1 || indexMultiply < indexDivide)) {
+                index = indexMultiply;
+                isMultiply = true;
+            } else if (indexDivide != -1 && (indexMultiply == -1 || indexDivide < indexMultiply)) {
+                index = indexDivide;
             } else {
                 break;
             }
@@ -285,13 +282,11 @@ public class NormCalc implements ActionListener{
             int indexMinus = operations.indexOf("-");
             boolean isPlus = false;
             
-            if(indexPlus != -1 && indexMinus != -1) {
-                if(indexPlus < indexMinus) {
-                    index = indexPlus;
-                    isPlus = true;
-                } else {
-                    index = indexMinus;
-                }
+            if(indexPlus != -1 && (indexMinus == -1 || indexPlus < indexMinus)) {
+                index = indexPlus;
+                isPlus = true;
+            } else if (indexMinus != -1 && (indexPlus == -1 || indexMinus < indexPlus)) {
+                index = indexMinus;
             } else {
                 break;
             }
@@ -308,7 +303,6 @@ public class NormCalc implements ActionListener{
         }
         
         this.input = operations.get(0);
-        this.calcUpdate();
     }
     
     public void calcClear() {
@@ -328,10 +322,6 @@ public class NormCalc implements ActionListener{
     }
     
     public void calcCommand(String command) {
-        if (this.overwrite) {
-            this.input = "";
-            this.overwrite = false;
-        }
         this.input += command;
     }
     

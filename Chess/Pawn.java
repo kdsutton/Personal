@@ -1,5 +1,5 @@
 package Chess;
-import java.awt.geom.Point2D;
+import java.awt.Point;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -9,23 +9,32 @@ import java.util.ArrayList;
  * @author Kieran Sutton
  * @version 3/9/18
  */
-public class Pawn implements ChessPiece {
-    private Point2D position;
-    
-    public Pawn(Point2D startingPosition) {
-        this.position = startingPosition;
+public class Pawn extends ChessPiece {
+    public Pawn(Point startingPosition, boolean isNotBlack) {
+        super(startingPosition, isNotBlack);
     }
     
-    public List<Point2D> getMoves() {
-        List<Point2D> moveList = new ArrayList<Point2D>();
-        return moveList;
-    }
-    
-    public void movePiece(Point2D point) {
-        this.position = point;
+    public List<Point> getMoves() {
+        List<Point> moveList = new ArrayList<Point>();
+        if(super.isPieceWhite()) {
+            moveList.add(new Point((int) super.getPosition().getX() - 1, (int) super.getPosition().getY()));
+            if(super.getPosition().getY() == 5) {
+                moveList.add(new Point((int) super.getPosition().getX() - 2, (int) super.getPosition().getY()));
+            }
+        } else {
+            moveList.add(new Point((int) super.getPosition().getX() + 1, (int) super.getPosition().getY()));
+            if(super.getPosition().getY() == 1) {
+                moveList.add(new Point((int) super.getPosition().getX() + 2, (int) super.getPosition().getY()));
+            }
+        }
+        return super.removeInvalidMoves(moveList);
     }
     
     public String getPieceType() {
-        return "Pawn";
+        if(super.isPieceWhite()) {
+            return "White Pawn";
+        } else {
+            return "Black Pawn";
+        }
     }
 }

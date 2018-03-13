@@ -32,7 +32,7 @@ public abstract class ChessPiece {
     public List<Point> removeInvalidMoves(List<Point> moveList) {
         for(int x = 0; x < moveList.size(); x++) {
             Point move = moveList.get(x);
-            if(move.getX() < 0 || move.getX() > 7 || move.getY() < 0 ||  move.getY() > 7) {
+            if(move.equals(this.position) || move.getX() < 0 || move.getX() > 7 || move.getY() < 0 ||  move.getY() > 7) {
                 moveList.remove(move);
                 x--;
             }

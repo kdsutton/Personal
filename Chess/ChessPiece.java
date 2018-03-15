@@ -1,6 +1,8 @@
 package Chess;
+import javax.swing.JComponent;
 import java.awt.Point;
 import java.util.List;
+import java.awt.Graphics;
 
 /**
  * Write a description of class ChessPiece here.
@@ -8,7 +10,7 @@ import java.util.List;
  * @author Kieran Sutton
  * @version 3/9/18
  */
-public abstract class ChessPiece {
+public abstract class ChessPiece extends JComponent{
     private Point position;
     private boolean isWhite;
     
@@ -42,4 +44,5 @@ public abstract class ChessPiece {
     
     public abstract List<Point> getMoves();
     public abstract String getPieceType();
+    public abstract void draw(Graphics g);
 }

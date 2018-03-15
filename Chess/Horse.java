@@ -2,6 +2,12 @@ package Chess;
 import java.awt.Point;
 import java.util.List;
 import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Write a description of class Horse here.
@@ -35,5 +41,20 @@ public class Horse extends ChessPiece {
         } else {
             return "Black Horse";
         }
+    }
+    
+    public void draw(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        BufferedImage img = null;
+        try {
+            if(super.isPieceWhite()) {
+                img = ImageIO.read(new File("Icons\\White Horse.png"));
+            } else {
+                img = ImageIO.read(new File("Icons\\Black Horse.png"));
+            }
+        } catch(IOException e) {}
+        int x = (int) super.getPosition().getX();
+        int y = (int) super.getPosition().getY();
+        g2.drawImage(img, 100 * x, 100 * y, this);
     }
 }

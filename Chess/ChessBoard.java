@@ -1,6 +1,5 @@
 package Chess;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -24,8 +23,11 @@ public class ChessBoard extends JPanel{
     public ChessBoard() {
         for(int y = 0; y < this.board.length; y++) {
             for(int x = 0; x < this.board[y].length; x++) {
-                this.board[y][x] = new Rectangle(100 * x, 100 * y, 100, 100);
+                this.board[y][x] = new Rectangle(new Point(80 * x, 80 * y), this.getPreferredSize());
             }
+        }
+        for(int x = 0; x < this.pieces.length; x++) {
+            Arrays.fill(this.pieces[x], null);
         }
         //New board pieces
         this.pieces[0][0] = new Rook(new Point(0, 0), false);
@@ -54,7 +56,7 @@ public class ChessBoard extends JPanel{
     }
     
     public Dimension getPreferredSize() {
-        return new Dimension(800, 800);
+        return new Dimension(640, 640);
     }
     
     public void paintComponent(Graphics g) {

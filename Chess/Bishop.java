@@ -62,13 +62,13 @@ public class Bishop extends ChessPiece {
         BufferedImage img = null;
         try {
             if(super.isPieceWhite()) {
-                img = ImageIO.read(new File("Icons\\White Bishop.png"));
+                img = ImageIO.read(new File("C:\\Users\\kdsutton\\GitHub\\Personal\\Chess\\Icons\\White Bishop.png"));
             } else {
-                img = ImageIO.read(new File("Icons\\Black Bishop.png"));
+                img = ImageIO.read(new File("C:\\Users\\kdsutton\\GitHub\\Personal\\Chess\\Icons\\Black Bishop.png"));
             }
         } catch(IOException e) {}
         int x = (int) super.getPosition().getX();
         int y = (int) super.getPosition().getY();
-        g2.drawImage(img, 100 * x, 100 * y, this);
+        g2.drawImage(img, 80 * x, 80 * y, this);
     }
 }

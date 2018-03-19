@@ -56,6 +56,6 @@ public class Pawn extends ChessPiece {
         } catch(IOException e) {}
         int x = (int) super.getPosition().getX();
         int y = (int) super.getPosition().getY();
-        g2.drawImage(img, 80 * x, 80 * y, this);
+        g2.drawImage(img, x, y, this);
     }
 }

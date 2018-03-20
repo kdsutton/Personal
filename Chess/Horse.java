@@ -22,8 +22,8 @@ public class Horse extends ChessPiece {
     
     public List<Point> getMoves() {
         List<Point> moveList = new ArrayList<Point>();
-        int x = (int) super.getPosition().getX();
-        int y = (int) super.getPosition().getY();
+        int x = (int) super.getBoardPoint().getX();
+        int y = (int) super.getBoardPoint().getY();
         moveList.add(new Point(x - 1, y - 2));
         moveList.add(new Point(x + 1, y - 2));
         moveList.add(new Point(x + 2, y - 1));

@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.List;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 
@@ -83,6 +84,12 @@ public class ChessBoard extends JPanel{
                 g2.setColor(this.DARK_BROWN);
             }
         }
+        g2.setColor(this.HIGHLIGHT);
+        for(Rectangle[] row : this.highlight) {
+            for(Rectangle rectangle : row) {
+                g2.draw(rectangle);
+            }
+        }
         for(ChessPiece[] row : this.pieces) {
             for(ChessPiece piece : row) {
                 if(piece != null) {
@@ -100,19 +107,36 @@ public class ChessBoard extends JPanel{
         this.activePiece = this.findPiece(point);
     }
     
+    public void removeActivePiece(Point point) {
+        this.activePiece = null;
+    }
+    
     public void highlightMoves(Point point) {
+        ChessPiece movingPiece;
         if(this.activePiece == null) {
-            
+            movingPiece = this.findPiece(point);
         } else {
-            
+            movingPiece = this.activePiece;
+        }
+        for(Rectangle[] row : this.highlight) {
+            Arrays.fill(row, null);
+        }
+        List<Point> moves = movingPiece.getMoves();
+        for(Point move : moves) {
+            int x = (int) move.getX();
+            int y = (int) move.getY();
+            this.highlight[y][x] = new Rectangle(60 * x, 60 * y, 60, 60);
         }
     }
     
     public class MouseListener implements MouseMotionListener {
         public void mousePressed(MouseEvent event) {
             setActivePiece(event.getPoint());
+            highlightMoves(event.getPoint());
         }
-        public void mouseReleased(MouseEvent event) {}
+        public void mouseReleased(MouseEvent event) {
+            removeActivePiece(event.getPoint());
+        }
         public void mouseClicked(MouseEvent event) {}
         public void mouseEntered(MouseEvent event) {
             highlightMoves(event.getPoint());

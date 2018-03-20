@@ -12,6 +12,7 @@ import java.awt.Graphics;
  */
 public abstract class ChessPiece extends JComponent{
     private Point position;
+    private Point boardPoint;
     private boolean isWhite;
     
     public ChessPiece(Point startingPosition, boolean isNotBlack) {
@@ -23,6 +24,10 @@ public abstract class ChessPiece extends JComponent{
         return this.position;
     }
     
+    public Point getBoardPoint() {
+        return this.boardPoint;
+    }
+    
     public boolean isPieceWhite() {
         return this.isWhite;
     }
@@ -31,10 +36,14 @@ public abstract class ChessPiece extends JComponent{
         this.position.setLocation(point);
     }
     
+    public void setBoardPoint(Point point) {
+        this.boardPoint = point;
+    }
+    
     public List<Point> removeInvalidMoves(List<Point> moveList) {
         for(int x = 0; x < moveList.size(); x++) {
             Point move = moveList.get(x);
-            if(move.equals(this.position) || move.getX() < 0 || move.getX() > 7 || move.getY() < 0 ||  move.getY() > 7) {
+            if(move.equals(this.boardPoint) || move.getX() < 0 || move.getX() > 7 || move.getY() < 0 ||  move.getY() > 7) {
                 moveList.remove(move);
                 x--;
             }

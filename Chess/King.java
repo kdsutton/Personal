@@ -22,8 +22,8 @@ public class King extends ChessPiece {
     
     public List<Point> getMoves() {
         List<Point> moveList = new ArrayList<Point>();
-        for(int x = (int) super.getPosition().getX() - 1; x <= (int) super.getPosition().getX() + 1; x++) {
-            for(int y = (int) super.getPosition().getY() - 1; y <= (int) super.getPosition().getY() + 1; y++) {
+        for(int x = (int) super.getBoardPoint().getX() - 1; x <= (int) super.getBoardPoint().getX() + 1; x++) {
+            for(int y = (int) super.getBoardPoint().getY() - 1; y <= (int) super.getBoardPoint().getY() + 1; y++) {
                 moveList.add(new Point(x, y));
             }
         }

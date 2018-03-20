@@ -22,26 +22,26 @@ public class Bishop extends ChessPiece {
     
     public List<Point> getMoves() {
         List<Point> moveList = new ArrayList<Point>();
-        int x = (int) super.getPosition().getX() - 1;
-        int y = (int) super.getPosition().getY() - 1;
+        int x = (int) super.getBoardPoint().getX() - 1;
+        int y = (int) super.getBoardPoint().getY() - 1;
         while(x >= 0 && y >= 0) {
             moveList.add(new Point(x, y));
             x--; y--;
         }
-        x = (int) super.getPosition().getX() + 1;
-        y = (int) super.getPosition().getY() - 1;
+        x = (int) super.getBoardPoint().getX() + 1;
+        y = (int) super.getBoardPoint().getY() - 1;
         while(x < 8 && y >= 0) {
             moveList.add(new Point(x, y));
             x++; y--;
         }
-        x = (int) super.getPosition().getX() + 1;
-        y = (int) super.getPosition().getY() + 1;
+        x = (int) super.getBoardPoint().getX() + 1;
+        y = (int) super.getBoardPoint().getY() + 1;
         while(x < 8 && y < 8) {
             moveList.add(new Point(x, y));
             x++; y++;
         }
-        x = (int) super.getPosition().getX() - 1;
-        y = (int) super.getPosition().getY() + 1;
+        x = (int) super.getBoardPoint().getX() - 1;
+        y = (int) super.getBoardPoint().getY() + 1;
         while(x >= 0 && y < 8) {
             moveList.add(new Point(x, y));
             x--; y++;

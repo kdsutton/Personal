@@ -23,14 +23,14 @@ public class Pawn extends ChessPiece {
     public List<Point> getMoves() {
         List<Point> moveList = new ArrayList<Point>();
         if(super.isPieceWhite()) {
-            moveList.add(new Point((int) super.getPosition().getX() - 1, (int) super.getPosition().getY()));
+            moveList.add(new Point((int) super.getBoardPoint().getX() - 1, (int) super.getBoardPoint().getY()));
             if(super.getPosition().getY() == 5) {
-                moveList.add(new Point((int) super.getPosition().getX() - 2, (int) super.getPosition().getY()));
+                moveList.add(new Point((int) super.getBoardPoint().getX() - 2, (int) super.getBoardPoint().getY()));
             }
         } else {
-            moveList.add(new Point((int) super.getPosition().getX() + 1, (int) super.getPosition().getY()));
+            moveList.add(new Point((int) super.getBoardPoint().getX() + 1, (int) super.getBoardPoint().getY()));
             if(super.getPosition().getY() == 1) {
-                moveList.add(new Point((int) super.getPosition().getX() + 2, (int) super.getPosition().getY()));
+                moveList.add(new Point((int) super.getBoardPoint().getX() + 2, (int) super.getBoardPoint().getY()));
             }
         }
         return super.removeInvalidMoves(moveList);

@@ -23,7 +23,7 @@ public class Queen extends ChessPiece {
     public List<Point> getMoves() {
         List<Point> moveList = new ArrayList<Point>();
         //Straight
-        Point temp = new Point(super.getPosition());
+        Point temp = new Point(super.getBoardPoint());
         for(int x = (int) temp.getX(); x >= 0; x--) {
             moveList.add(new Point(x, (int) temp.getY()));
         }
@@ -37,26 +37,26 @@ public class Queen extends ChessPiece {
             moveList.add(new Point((int) temp.getX(), y));
         }
         //Diagonal
-        int x = (int) super.getPosition().getX() - 1;
-        int y = (int) super.getPosition().getY() - 1;
+        int x = (int) super.getBoardPoint().getX() - 1;
+        int y = (int) super.getBoardPoint().getY() - 1;
         while(x >= 0 && y >= 0) {
             moveList.add(new Point(x, y));
             x--; y--;
         }
-        x = (int) super.getPosition().getX() + 1;
-        y = (int) super.getPosition().getY() - 1;
+        x = (int) super.getBoardPoint().getX() + 1;
+        y = (int) super.getBoardPoint().getY() - 1;
         while(x < 8 && y >= 0) {
             moveList.add(new Point(x, y));
             x++; y--;
         }
-        x = (int) super.getPosition().getX() + 1;
-        y = (int) super.getPosition().getY() + 1;
+        x = (int) super.getBoardPoint().getX() + 1;
+        y = (int) super.getBoardPoint().getY() + 1;
         while(x < 8 && y < 8) {
             moveList.add(new Point(x, y));
             x++; y++;
         }
-        x = (int) super.getPosition().getX() - 1;
-        y = (int) super.getPosition().getY() + 1;
+        x = (int) super.getBoardPoint().getX() - 1;
+        y = (int) super.getBoardPoint().getY() + 1;
         while(x >= 0 && y < 8) {
             moveList.add(new Point(x, y));
             x--; y++;

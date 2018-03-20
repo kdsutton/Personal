@@ -22,7 +22,7 @@ public class Rook extends ChessPiece {
     
     public List<Point> getMoves() {
         List<Point> moveList = new ArrayList<Point>();
-        Point temp = new Point(super.getPosition());
+        Point temp = new Point(super.getBoardPoint());
         for(int x = (int) temp.getX(); x >= 0; x--) {
             moveList.add(new Point(x, (int) temp.getY()));
         }

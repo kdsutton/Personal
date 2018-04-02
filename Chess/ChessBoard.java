@@ -87,7 +87,9 @@ public class ChessBoard extends JPanel{
         g2.setColor(this.HIGHLIGHT);
         for(Rectangle[] row : this.highlight) {
             for(Rectangle rectangle : row) {
-                g2.draw(rectangle);
+                if(rectangle != null) {
+                    g2.draw(rectangle);
+                }
             }
         }
         for(ChessPiece[] row : this.pieces) {
@@ -100,6 +102,21 @@ public class ChessBoard extends JPanel{
     }
     
     public ChessPiece findPiece(Point point) {
+        int x = 0;
+        int y = 0;
+        boolean found = false;
+        OUTER:
+        for(y = 0; y < 8; y++) {
+            for(x = 0; x < 8; x++) {
+                if(this.board[y][x].contains(point)) {
+                    found = true;
+                    break OUTER;
+                }
+            }
+        }
+        if(found) {
+            return(this.pieces[y][x]);
+        }
         return null;
     }
     
@@ -138,9 +155,7 @@ public class ChessBoard extends JPanel{
             removeActivePiece(event.getPoint());
         }
         public void mouseClicked(MouseEvent event) {}
-        public void mouseEntered(MouseEvent event) {
-            highlightMoves(event.getPoint());
-        }
+        public void mouseEntered(MouseEvent event) {}
         public void mouseExited(MouseEvent event) {}
         public void mouseDragged(MouseEvent event) {
             

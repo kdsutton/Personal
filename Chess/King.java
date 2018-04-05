@@ -16,8 +16,8 @@ import java.io.IOException;
  * @version 3/13/18
  */
 public class King extends ChessPiece {
-    public King(Point startingPosition, boolean isNotBlack) {
-        super(startingPosition, isNotBlack);
+    public King(Point startingPosition, Point boardPosition, boolean isNotBlack) {
+        super(startingPosition, boardPosition, isNotBlack);
     }
     
     public List<Point> getMoves() {
@@ -27,7 +27,7 @@ public class King extends ChessPiece {
                 moveList.add(new Point(x, y));
             }
         }
-        return super.removeInvalidMoves(moveList);
+        return moveList;
     }
     
     public String getPieceType() {

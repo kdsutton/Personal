@@ -16,8 +16,8 @@ import java.io.IOException;
  * @version 3/9/18
  */
 public class Rook extends ChessPiece {
-    public Rook(Point startingPosition, boolean isNotBlack) {
-        super(startingPosition, isNotBlack);
+    public Rook(Point startingPosition, Point boardPosition, boolean isNotBlack) {
+        super(startingPosition, boardPosition, isNotBlack);
     }
     
     public List<Point> getMoves() {
@@ -35,7 +35,7 @@ public class Rook extends ChessPiece {
         for(int y = (int) temp.getY(); y < 8; y++) {
             moveList.add(new Point((int) temp.getX(), y));
         }
-        return super.removeInvalidMoves(moveList);
+        return moveList;
     }
     
     public String getPieceType() {

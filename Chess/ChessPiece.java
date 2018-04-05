@@ -15,8 +15,9 @@ public abstract class ChessPiece extends JComponent{
     private Point boardPoint;
     private boolean isWhite;
     
-    public ChessPiece(Point startingPosition, boolean isNotBlack) {
+    public ChessPiece(Point startingPosition, Point boardPosition, boolean isNotBlack) {
         this.position = startingPosition;
+        this.boardPoint = boardPosition;
         this.isWhite = isNotBlack;
     }
     
@@ -38,17 +39,6 @@ public abstract class ChessPiece extends JComponent{
     
     public void setBoardPoint(Point point) {
         this.boardPoint = point;
-    }
-    
-    public List<Point> removeInvalidMoves(List<Point> moveList) {
-        for(int x = 0; x < moveList.size(); x++) {
-            Point move = moveList.get(x);
-            if(move.equals(this.boardPoint) || move.getX() < 0 || move.getX() > 7 || move.getY() < 0 ||  move.getY() > 7) {
-                moveList.remove(move);
-                x--;
-            }
-        }
-        return moveList;
     }
     
     public abstract List<Point> getMoves();

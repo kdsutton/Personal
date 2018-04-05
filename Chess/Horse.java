@@ -16,8 +16,8 @@ import java.io.IOException;
  * @version 3/12/18
  */
 public class Horse extends ChessPiece {
-    public Horse(Point startingPosition, boolean isNotBlack) {
-        super(startingPosition, isNotBlack);
+    public Horse(Point startingPosition, Point boardPosition, boolean isNotBlack) {
+        super(startingPosition, boardPosition, isNotBlack);
     }
     
     public List<Point> getMoves() {
@@ -32,7 +32,7 @@ public class Horse extends ChessPiece {
         moveList.add(new Point(x - 1, y + 2));
         moveList.add(new Point(x - 2, y + 1));
         moveList.add(new Point(x - 2, y - 1));
-        return super.removeInvalidMoves(moveList);
+        return moveList;
     }
     
     public String getPieceType() {

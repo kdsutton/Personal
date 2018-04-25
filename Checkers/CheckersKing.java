@@ -16,9 +16,11 @@ public class CheckersKing extends CheckersPiece {
     private static final Color GREY = new Color(128, 128, 128);
     private static final double[] STAR_X = {10, 16, 0.5, 4, 0.5};
     private static final double[] STAR_Y = {0, 18, 7, 7, 18};
+    private double scale;
     
-    public CheckersKing(Point startingPoint, Point startingLocation, boolean isBlack, double startingScale) {
-        super(startingPoint, startingLocation, isBlack, startingScale);
+    public CheckersKing(Point startingPoint, Point startingLocation, boolean isBlack, double squareSize) {
+        super(startingPoint, startingLocation, isBlack, squareSize);
+        this.scale = squareSize / 21;
     }
     
     public void draw(Graphics2D g2) {

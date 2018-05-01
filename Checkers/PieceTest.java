@@ -1,6 +1,7 @@
 package Checkers;
 import javax.swing.JPanel;
 import javax.swing.JComponent;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,12 +14,14 @@ import java.awt.Color;
  * @version 4/25/18
  */
 public class PieceTest extends JPanel {
-    CheckersKing king;
+    private CheckersKing king;
     
     public PieceTest() {
-        this.king = new CheckersKing(new Point(), new Point(), false, this.getSquareSize());
+        this.setSize(500, 500);
+        this.king = new CheckersKing(new Point(0, 0), new Point(0, 0), false, this.getSquareSize());
         this.setBackground(Color.WHITE);
         this.setVisible(true);
+        this.repaint();
     }
     
     public double getSquareSize() {
@@ -32,6 +35,10 @@ public class PieceTest extends JPanel {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         this.king.draw(g2);
+    }
+    
+    public Dimension getPreferredSize() {
+        return new Dimension(500, 500);
     }
     
     public static void main(String[] args) {

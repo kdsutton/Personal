@@ -13,8 +13,8 @@ public class PieceTestViewer extends JFrame {
     public PieceTestViewer() {
         this.setTitle("Piece Test");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(100, 100);
         this.add(new PieceTest());
+        this.pack();
         this.setVisible(true);
     }
     

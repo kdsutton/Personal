@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.Color;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Write a description of class CheckersPiece here.
@@ -18,16 +20,51 @@ public class CheckersPiece extends JComponent{
     double radius;
     double offset;
     
-    public CheckersPiece(Point startingPoint, Point startingLocation, boolean isBlack, double squareSize) {
+    public CheckersPiece(Point startingPoint, Point startingLocation, boolean isNotBlack, double squareSize) {
         this.boardPoint = startingPoint;
         this.location = startingLocation;
-        this.isRed = !isBlack;
+        this.isRed = isNotBlack;
         this.updateSize(squareSize);
+    }
+    
+    public Point getBoardPoint() {
+        return this.boardPoint;
+    }
+    
+    public void setBoardPoint(Point point) {
+        this.boardPoint = point;
+    }
+    
+    public void setLocation(Point point) {
+        this.location = point;
     }
     
     public void updateSize(double squareSize) {
         this.radius = squareSize / 2.1;
         this.offset = (squareSize - 2 * (squareSize / 2.1))/2;
+    }
+    
+    public List<Point> getDefaultMoves() {
+        int x = (int) this.boardPoint.getX();
+        int y = (int) this.boardPoint.getY();
+        List<Point> moves = new ArrayList<Point>();
+        if(x > 0) {
+            if(y > 0) {
+                moves.add(new Point(x - 1, y - 1));
+            }
+            if(y < 7) {
+                moves.add(new Point(x - 1, y + 1));
+            }
+        }
+        if(x < 7) {
+            if(y > 0) {
+                moves.add(new Point(x + 1, y - 1));
+            }
+            if(y < 7) {
+                moves.add(new Point(x + 1, y + 1));
+            }
+        }
+        return moves;
     }
     
     public void draw(Graphics2D g2, double squareSize) {

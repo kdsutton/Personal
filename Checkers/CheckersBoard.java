@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.ArrayList;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
 
@@ -47,7 +48,20 @@ public class CheckersBoard extends JPanel{
         this.repaint();
     }
     
+    public void updateSquareSize() {
+        if(this.getWidth() >= this.getHeight()) {
+            this.squareSize = (int) (this.getHeight() / 8);
+        } else {
+            this.squareSize = (int) (this.getWidth() / 8);
+        }
+    }
+    
+    public Dimension getPreferredSize() {
+        return new Dimension(800, 800);
+    }
+    
     public void paintComponent(Graphics g) {
+        this.updateSquareSize();
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(this.DARK_BROWN);
         for(Rectangle[] row : this.board) {
@@ -76,7 +90,7 @@ public class CheckersBoard extends JPanel{
         for(CheckersPiece[] row : this.pieces) {
             for(CheckersPiece piece : row) {
                 if(piece != null) {
-                    piece.draw(g2);
+                    piece.draw(g2, this.squareSize);
                 }
             }
         }
@@ -112,6 +126,30 @@ public class CheckersBoard extends JPanel{
             
         }
         this.repaint();
+    }
+    
+    public List<Point> findMoves(CheckersPiece piece) {
+        int x = (int) piece.getBoardPoint().getX();
+        int y = (int) piece.getBoardPoint().getY();
+        List<Point> moves = piece.getDefaultMoves();
+        //add for loop
+            if(x > 0) {
+                if(y > 0) {
+                    moves.add(new Point(x - 1, y - 1));
+                }
+                if(y < 7) {
+                    moves.add(new Point(x - 1, y + 1));
+                }
+            }
+            if(x < 7) {
+                if(y > 0) {
+                    moves.add(new Point(x + 1, y - 1));
+                }
+                if(y < 7) {
+                    moves.add(new Point(x + 1, y + 1));
+                }
+            }
+        return moves;
     }
     
     public class MouseListener implements MouseInputListener {

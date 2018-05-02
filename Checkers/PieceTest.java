@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.Color;
 
 /**
@@ -18,8 +19,7 @@ public class PieceTest extends JPanel {
     
     public PieceTest() {
         this.setSize(500, 500);
-        this.king = new CheckersKing(new Point(0, 0), new Point(0, 0), false, this.getSquareSize());
-        this.setBackground(Color.WHITE);
+        this.king = new CheckersKing(new Point(0, 0), new Point(0, 0), true, this.getSquareSize());
         this.setVisible(true);
         this.repaint();
     }
@@ -34,7 +34,9 @@ public class PieceTest extends JPanel {
     
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        this.king.draw(g2);
+        g2.setColor(Color.WHITE);
+        g2.fill(new Rectangle2D.Double(0, 0, this.getSquareSize(), this.getSquareSize()));
+        this.king.draw(g2, this.getSquareSize());
     }
     
     public Dimension getPreferredSize() {

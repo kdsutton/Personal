@@ -20,18 +20,23 @@ public class CheckersKing extends CheckersPiece {
     
     public CheckersKing(Point startingPoint, Point startingLocation, boolean isBlack, double squareSize) {
         super(startingPoint, startingLocation, isBlack, squareSize);
+        this.updateSize(squareSize);
+    }
+    
+    public void updateSize(double squareSize) {
+        super.updateSize(squareSize);
         this.scale = squareSize / 21;
     }
     
-    public void draw(Graphics2D g2) {
-        super.draw(g2);
+    public void draw(Graphics2D g2, double squareSize) {
+        super.draw(g2, squareSize);
         int[] xArray = new int[10];
         for(int i = 0; i < 10; i++) {
-            xArray[i] = (int) (this.scale * (this.offset + this.location.getX() + this.STAR_X[i]));
+            xArray[i] = (int) (this.offset + this.scale * (this.location.getX() + this.STAR_X[i]));
         }
         int[] yArray = new int[10];
         for(int i = 0; i < 10; i++) {
-            yArray[i] = (int) (this.scale * (this.offset + this.location.getY() + this.STAR_Y[i]));
+            yArray[i] = (int) (this.offset + this.scale * (this.location.getY() + this.STAR_Y[i]));
         }
         g2.setColor(this.GREY);
         if(this.isRed) {

@@ -22,11 +22,16 @@ public class CheckersPiece extends JComponent{
         this.boardPoint = startingPoint;
         this.location = startingLocation;
         this.isRed = !isBlack;
+        this.updateSize(squareSize);
+    }
+    
+    public void updateSize(double squareSize) {
         this.radius = squareSize / 2.1;
         this.offset = (squareSize - 2 * (squareSize / 2.1))/2;
     }
     
-    public void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2, double squareSize) {
+        this.updateSize(squareSize);
         g2.setColor(Color.BLACK);
         if(this.isRed){
             g2.setColor(Color.RED);

@@ -2,10 +2,10 @@
 dependency1.from=SorterTest
 dependency1.to=Sorter
 dependency1.type=UsesDependency
-editor.fx.0.height=1026
-editor.fx.0.width=1696
-editor.fx.0.x=-8
-editor.fx.0.y=-8
+editor.fx.0.height=0
+editor.fx.0.width=0
+editor.fx.0.x=0
+editor.fx.0.y=0
 objectbench.height=157
 objectbench.width=1656
 package.divider.horizontal=0.6

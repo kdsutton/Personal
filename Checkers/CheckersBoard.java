@@ -31,6 +31,8 @@ public class CheckersBoard extends JPanel{
     public CheckersBoard() {
         this.addMouseListener(new MouseListener());
         this.addMouseMotionListener(new MouseListener());
+        this.setSize(800, 800);
+        this.updateSquareSize();
         if(this.getWidth() >= this.getHeight()) {
             this.squareSize = (int) (this.getHeight() / 8);
         } else {
@@ -45,6 +47,19 @@ public class CheckersBoard extends JPanel{
             Arrays.fill(this.highlight[x], null);
             Arrays.fill(this.pieces[x], null);
         }
+        for(int x = 1; x < 8; x += 2) {
+            this.pieces[0][x] = new CheckersPiece(new Point(x, 0), new Point(x * this.squareSize, 0), false, this.squareSize);
+        }
+        for(int x = 0; x < 8; x += 2) {
+            this.pieces[1][x] = new CheckersPiece(new Point(x, 1), new Point(x * this.squareSize, 1 * this.squareSize), false, this.squareSize);
+        }
+        for(int x = 1; x < 8; x += 2) {
+            this.pieces[6][x] = new CheckersPiece(new Point(x, 6), new Point(x * this.squareSize, 6 * this.squareSize), true, this.squareSize);
+        }
+        for(int x = 0; x < 8; x += 2) {
+            this.pieces[7][x] = new CheckersPiece(new Point(x, 7), new Point(x * this.squareSize, 7 * this.squareSize), true, this.squareSize);
+        }
+        this.setVisible(true);
         this.repaint();
     }
     
@@ -131,24 +146,23 @@ public class CheckersBoard extends JPanel{
     public List<Point> findMoves(CheckersPiece piece) {
         int x = (int) piece.getBoardPoint().getX();
         int y = (int) piece.getBoardPoint().getY();
-        List<Point> moves = piece.getDefaultMoves();
-        //add for loop
+        List<Point> moves = new ArrayList<Point>();
+        if(y > 0 && (piece instanceof CheckersKing || piece.isRed())) {
             if(x > 0) {
-                if(y > 0) {
-                    moves.add(new Point(x - 1, y - 1));
-                }
-                if(y < 7) {
-                    moves.add(new Point(x - 1, y + 1));
-                }
+                
             }
             if(x < 7) {
-                if(y > 0) {
-                    moves.add(new Point(x + 1, y - 1));
-                }
-                if(y < 7) {
-                    moves.add(new Point(x + 1, y + 1));
-                }
+                
             }
+        }
+        if(y < 7 && (piece instanceof CheckersKing || piece.isRed() == false)) {
+            if(x > 0) {
+                
+            }
+            if(x < 7) {
+                
+            }
+        }
         return moves;
     }
     
@@ -165,6 +179,8 @@ public class CheckersBoard extends JPanel{
         public void mouseDragged(MouseEvent event) {
             
         }
-        public void mouseMoved(MouseEvent event) {}
+        public void mouseMoved(MouseEvent event) {
+            
+        }
     }
 }

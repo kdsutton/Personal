@@ -27,6 +27,10 @@ public class CheckersPiece extends JComponent{
         this.updateSize(squareSize);
     }
     
+    public boolean isRed() {
+        return this.isRed;
+    }
+    
     public Point getBoardPoint() {
         return this.boardPoint;
     }
@@ -42,29 +46,6 @@ public class CheckersPiece extends JComponent{
     public void updateSize(double squareSize) {
         this.radius = squareSize / 2.1;
         this.offset = (squareSize - 2 * (squareSize / 2.1))/2;
-    }
-    
-    public List<Point> getDefaultMoves() {
-        int x = (int) this.boardPoint.getX();
-        int y = (int) this.boardPoint.getY();
-        List<Point> moves = new ArrayList<Point>();
-        if(x > 0) {
-            if(y > 0) {
-                moves.add(new Point(x - 1, y - 1));
-            }
-            if(y < 7) {
-                moves.add(new Point(x - 1, y + 1));
-            }
-        }
-        if(x < 7) {
-            if(y > 0) {
-                moves.add(new Point(x + 1, y - 1));
-            }
-            if(y < 7) {
-                moves.add(new Point(x + 1, y + 1));
-            }
-        }
-        return moves;
     }
     
     public void draw(Graphics2D g2, double squareSize) {

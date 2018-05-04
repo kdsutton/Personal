@@ -27,6 +27,8 @@ public class CheckersBoard extends JPanel{
     private CheckersPiece[][] pieces = new CheckersPiece[8][8];
     private CheckersPiece activePiece = null;
     private int squareSize;
+    private double xOffset;
+    private double yOffset;
     
     public CheckersBoard() {
         this.addMouseListener(new MouseListener());
@@ -119,15 +121,26 @@ public class CheckersBoard extends JPanel{
     
     public void setActivePiece(Point point) {
         this.activePiece = this.findPiece(point);
-        this.highlightMoves(point);
+        if(this.activePiece != null) {
+            Point location = this.activePiece.getLocation();
+            this.xOffset = location.getX() - point.getX();
+            this.yOffset = location.getY() - point.getY();
+        }
+    }
+    
+    public void moveActivePiece(Point point) {
+        if(this.activePiece != null) {
+            this.activePiece.setLocation(new Point((int) (point.getX() + this.xOffset), (int) (point.getY() + this.yOffset)));
+        }
+        this.repaint();
     }
     
     public void removeActivePiece(Point point) {
         this.activePiece = null;
-        this.highlightMoves(point);
     }
     
     public void highlightMoves(Point point) {
+        this.updateSquareSize();
         CheckersPiece movingPiece;
         if(this.activePiece == null) {
             movingPiece = this.findPiece(point);
@@ -138,7 +151,12 @@ public class CheckersBoard extends JPanel{
             Arrays.fill(row, null);
         }
         if(movingPiece != null) {
-            
+            List<Point> moves = this.findMoves(movingPiece);
+            for(Point move : moves) {
+                int x = (int) move.getX();
+                int y = (int) move.getY();
+                this.highlight[y][x] = new Rectangle((int) this.squareSize * x, (int) this.squareSize * y, squareSize, squareSize);
+            }
         }
         this.repaint();
     }
@@ -147,21 +165,25 @@ public class CheckersBoard extends JPanel{
         int x = (int) piece.getBoardPoint().getX();
         int y = (int) piece.getBoardPoint().getY();
         List<Point> moves = new ArrayList<Point>();
-        if(y > 0 && (piece instanceof CheckersKing || piece.isRed())) {
-            if(x > 0) {
-                
-            }
-            if(x < 7) {
-                
-            }
+        if(x > 1 && y > 1 && this.pieces[y - 1][x - 1] == null) {
+            moves.add(new Point(x - 1, y - 1));
+        } else if(x > 2 && y > 2 && this.pieces[y - 1][x - 1] != null && this.pieces[y - 2][x - 2] == null) {
+            moves.add(new Point(x - 2, y - 2));
         }
-        if(y < 7 && (piece instanceof CheckersKing || piece.isRed() == false)) {
-            if(x > 0) {
-                
-            }
-            if(x < 7) {
-                
-            }
+        if(x > 1 && y < 7 && this.pieces[y + 1][x - 1] == null) {
+            moves.add(new Point(x - 1, y + 1));
+        } else if(x > 2 && y < 6 && this.pieces[y + 1][x - 1] != null && this.pieces[y + 2][x - 2] == null) {
+            moves.add(new Point(x - 2, y + 2));
+        }
+        if(x < 7 && y > 1 && this.pieces[y - 1][x + 1] == null) {
+            moves.add(new Point(x + 1, y - 1));
+        } else if(x < 6 && y > 2 && this.pieces[y - 1][x + 1] != null && this.pieces[y - 2][x + 2] == null) {
+            moves.add(new Point(x + 2, y - 2));
+        }
+        if(x < 7 && y < 7 && this.pieces[y + 1][x + 1] == null) {
+            moves.add(new Point(x + 1, y + 1));
+        } else if(x < 6 && y < 6 && this.pieces[y + 1][x + 1] != null && this.pieces[y + 2][x + 2] == null) {
+            moves.add(new Point(x + 2, y + 2));
         }
         return moves;
     }
@@ -177,10 +199,10 @@ public class CheckersBoard extends JPanel{
         public void mouseEntered(MouseEvent event) {}
         public void mouseExited(MouseEvent event) {}
         public void mouseDragged(MouseEvent event) {
-            
+            moveActivePiece(event.getPoint());
         }
         public void mouseMoved(MouseEvent event) {
-            
+            highlightMoves(event.getPoint());
         }
     }
 }

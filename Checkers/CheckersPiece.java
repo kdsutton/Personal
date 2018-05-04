@@ -39,6 +39,10 @@ public class CheckersPiece extends JComponent{
         this.boardPoint = point;
     }
     
+    public Point getLocation() {
+        return this.location;
+    }
+    
     public void setLocation(Point point) {
         this.location = point;
     }

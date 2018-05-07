@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 public class CheckersBoard extends JPanel{
     private static final Color LIGHT_BROWN = new Color(238, 238, 210);
     private static final Color DARK_BROWN = new Color(102, 51, 0);
-    private static final Color HIGHLIGHT = new Color(255, 251, 204, 191);
+    private static final Color HIGHLIGHT = new Color(255, 251, 204);
     private Rectangle[][] board = new Rectangle[8][8];
     private Rectangle[][] highlight = new Rectangle[8][8];
     private CheckersPiece[][] pieces = new CheckersPiece[8][8];
@@ -29,6 +29,7 @@ public class CheckersBoard extends JPanel{
     private int squareSize;
     private double xOffset;
     private double yOffset;
+    private boolean redTurn = true;
     
     public CheckersBoard() {
         this.addMouseListener(new MouseListener());
@@ -39,11 +40,6 @@ public class CheckersBoard extends JPanel{
             this.squareSize = (int) (this.getHeight() / 8);
         } else {
             this.squareSize = (int) (this.getWidth() / 8);
-        }
-        for(int y = 0; y < this.board.length; y++) {
-            for(int x = 0; x < this.board[y].length; x++) {
-                this.board[y][x] = new Rectangle(this.squareSize * x, this.squareSize * y, this.squareSize, this.squareSize);
-            }
         }
         for(int x = 0; x < this.pieces.length; x++) {
             Arrays.fill(this.highlight[x], null);
@@ -70,6 +66,11 @@ public class CheckersBoard extends JPanel{
             this.squareSize = (int) (this.getHeight() / 8);
         } else {
             this.squareSize = (int) (this.getWidth() / 8);
+        }
+        for(int y = 0; y < this.board.length; y++) {
+            for(int x = 0; x < this.board[y].length; x++) {
+                this.board[y][x] = new Rectangle(this.squareSize * x, this.squareSize * y, this.squareSize, this.squareSize);
+            }
         }
     }
     
@@ -116,7 +117,10 @@ public class CheckersBoard extends JPanel{
     public CheckersPiece findPiece(Point point) {
         int x = (int) point.getX() / this.squareSize;
         int y = (int) point.getY() / this.squareSize;
-        return this.pieces[y][x];
+        if(x < 8 && y < 8) {
+            return this.pieces[y][x];
+        }
+        return null;
     }
     
     public void setActivePiece(Point point) {
@@ -135,8 +139,38 @@ public class CheckersBoard extends JPanel{
         this.repaint();
     }
     
-    public void removeActivePiece(Point point) {
-        this.activePiece = null;
+    public void updateActivePiece(Point point) {
+        if(this.activePiece != null) {
+            this.updateSquareSize();
+            Point boardPoint = new Point((int) (point.getX() / this.squareSize), (int) (point.getY() / this.squareSize));
+            if(this.findMoves(this.activePiece).contains(boardPoint)) {
+                if((this.activePiece.isRed() && boardPoint.getY() == 0) || (this.activePiece.isRed() == false && boardPoint.getY() == 7)) {
+                    this.activePiece = new CheckersKing(this.activePiece, this.squareSize);
+                }
+                Point jumped = this.testForJump(this.activePiece.getBoardPoint(), boardPoint);
+                this.pieces[(int) this.activePiece.getBoardPoint().getY()][(int) this.activePiece.getBoardPoint().getX()] = null;
+                this.activePiece.setBoardPoint(boardPoint);
+                this.pieces[(int) this.activePiece.getBoardPoint().getY()][(int) this.activePiece.getBoardPoint().getX()] = this.activePiece;
+                if(jumped != null) {
+                    this.pieces[(int) jumped.getY()][(int) jumped.getX()] = null;
+                }
+            } else {
+                boardPoint = this.activePiece.getBoardPoint();
+            }
+            this.activePiece.setLocation(new Point((int) (boardPoint.getX() * this.squareSize), (int) (boardPoint.getY() * this.squareSize)));
+            this.activePiece = null;
+            this.redTurn = !this.redTurn;
+        }
+        this.repaint();
+    }
+    
+    public Point testForJump(Point from, Point to) {
+        if(from.distance(to) > 2) {
+            int jumpedX = (int) (from.getX() - (from.getX() - to.getX()) / 2);
+            int jumpedY = (int) (from.getY() - (from.getY() - to.getY()) / 2);
+            return new Point(jumpedX, jumpedY);
+        }
+        return null;
     }
     
     public void highlightMoves(Point point) {
@@ -165,25 +199,52 @@ public class CheckersBoard extends JPanel{
         int x = (int) piece.getBoardPoint().getX();
         int y = (int) piece.getBoardPoint().getY();
         List<Point> moves = new ArrayList<Point>();
-        if(x > 1 && y > 1 && this.pieces[y - 1][x - 1] == null) {
-            moves.add(new Point(x - 1, y - 1));
-        } else if(x > 2 && y > 2 && this.pieces[y - 1][x - 1] != null && this.pieces[y - 2][x - 2] == null) {
-            moves.add(new Point(x - 2, y - 2));
-        }
-        if(x > 1 && y < 7 && this.pieces[y + 1][x - 1] == null) {
-            moves.add(new Point(x - 1, y + 1));
-        } else if(x > 2 && y < 6 && this.pieces[y + 1][x - 1] != null && this.pieces[y + 2][x - 2] == null) {
-            moves.add(new Point(x - 2, y + 2));
-        }
-        if(x < 7 && y > 1 && this.pieces[y - 1][x + 1] == null) {
-            moves.add(new Point(x + 1, y - 1));
-        } else if(x < 6 && y > 2 && this.pieces[y - 1][x + 1] != null && this.pieces[y - 2][x + 2] == null) {
-            moves.add(new Point(x + 2, y - 2));
-        }
-        if(x < 7 && y < 7 && this.pieces[y + 1][x + 1] == null) {
-            moves.add(new Point(x + 1, y + 1));
-        } else if(x < 6 && y < 6 && this.pieces[y + 1][x + 1] != null && this.pieces[y + 2][x + 2] == null) {
-            moves.add(new Point(x + 2, y + 2));
+        if(this.redTurn && piece.isRed()) {
+            if(x > 0 && y > 0 && this.pieces[y - 1][x - 1] == null) {
+                moves.add(new Point(x - 1, y - 1));
+            } else if(x > 1 && y > 1 && this.pieces[y - 1][x - 1] != null && this.pieces[y - 2][x - 2] == null && this.pieces[y - 1][x - 1].isRed() == false) {
+                moves.add(new Point(x - 2, y - 2));
+            }
+            if(x < 7 && y > 0 && this.pieces[y - 1][x + 1] == null) {
+                moves.add(new Point(x + 1, y - 1));
+            } else if(x < 6 && y > 1 && this.pieces[y - 1][x + 1] != null && this.pieces[y - 2][x + 2] == null && this.pieces[y - 1][x + 1].isRed() == false) {
+                moves.add(new Point(x + 2, y - 2));
+            }
+            if(piece instanceof CheckersKing) {
+                if(x > 0 && y < 7 && this.pieces[y + 1][x - 1] == null) {
+                    moves.add(new Point(x - 1, y + 1));
+                } else if(x > 1 && y < 6 && this.pieces[y + 1][x - 1] != null && this.pieces[y + 2][x - 2] == null && this.pieces[y + 1][x - 1].isRed() == false) {
+                    moves.add(new Point(x - 2, y + 2));
+                }
+                if(x < 7 && y < 7 && this.pieces[y + 1][x + 1] == null) {
+                    moves.add(new Point(x + 1, y + 1));
+                } else if(x < 6 && y < 6 && this.pieces[y + 1][x + 1] != null && this.pieces[y + 2][x + 2] == null && this.pieces[y + 1][x + 1].isRed() == false) {
+                    moves.add(new Point(x + 2, y + 2));
+                }
+            }
+        } else if(this.redTurn == false && piece.isRed() == false) {
+            if(x > 0 && y < 7 && this.pieces[y + 1][x - 1] == null) {
+                moves.add(new Point(x - 1, y + 1));
+            } else if(x > 1 && y < 6 && this.pieces[y + 1][x - 1] != null && this.pieces[y + 2][x - 2] == null && this.pieces[y + 1][x - 1].isRed()) {
+                moves.add(new Point(x - 2, y + 2));
+            }
+            if(x < 7 && y < 7 && this.pieces[y + 1][x + 1] == null) {
+                moves.add(new Point(x + 1, y + 1));
+            } else if(x < 6 && y < 6 && this.pieces[y + 1][x + 1] != null && this.pieces[y + 2][x + 2] == null && this.pieces[y + 1][x + 1].isRed()) {
+                moves.add(new Point(x + 2, y + 2));
+            }
+            if(piece instanceof CheckersKing) {
+                if(x > 0 && y > 0 && this.pieces[y - 1][x - 1] == null) {
+                    moves.add(new Point(x - 1, y - 1));
+                } else if(x > 1 && y > 1 && this.pieces[y - 1][x - 1] != null && this.pieces[y - 2][x - 2] == null && this.pieces[y - 1][x - 1].isRed()) {
+                    moves.add(new Point(x - 2, y - 2));
+                }
+                if(x < 7 && y > 0 && this.pieces[y - 1][x + 1] == null) {
+                    moves.add(new Point(x + 1, y - 1));
+                } else if(x < 6 && y > 1 && this.pieces[y - 1][x + 1] != null && this.pieces[y - 2][x + 2] == null && this.pieces[y - 1][x + 1].isRed()) {
+                    moves.add(new Point(x + 2, y - 2));
+                }
+            }
         }
         return moves;
     }
@@ -193,7 +254,7 @@ public class CheckersBoard extends JPanel{
             setActivePiece(event.getPoint());
         }
         public void mouseReleased(MouseEvent event) {
-            removeActivePiece(event.getPoint());
+            updateActivePiece(event.getPoint());
         }
         public void mouseClicked(MouseEvent event) {}
         public void mouseEntered(MouseEvent event) {}

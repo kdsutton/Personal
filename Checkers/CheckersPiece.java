@@ -14,11 +14,11 @@ import java.util.ArrayList;
  * @version 4/20/18
  */
 public class CheckersPiece extends JComponent{
-    Point boardPoint;
-    Point location;
-    boolean isRed;
-    double radius;
-    double offset;
+    private Point boardPoint;
+    private Point location;
+    private boolean isRed;
+    private double radius;
+    private double offset;
     
     public CheckersPiece(Point startingPoint, Point startingLocation, boolean isNotBlack, double squareSize) {
         this.boardPoint = startingPoint;
@@ -45,6 +45,10 @@ public class CheckersPiece extends JComponent{
     
     public void setLocation(Point point) {
         this.location = point;
+    }
+    
+    public double getOffset() {
+        return this.offset;
     }
     
     public void updateSize(double squareSize) {

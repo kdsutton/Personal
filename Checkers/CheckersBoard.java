@@ -154,12 +154,12 @@ public class CheckersBoard extends JPanel{
                 if(jumped != null) {
                     this.pieces[(int) jumped.getY()][(int) jumped.getX()] = null;
                 }
+                this.redTurn = !this.redTurn;
             } else {
                 boardPoint = this.activePiece.getBoardPoint();
             }
             this.activePiece.setLocation(new Point((int) (boardPoint.getX() * this.squareSize), (int) (boardPoint.getY() * this.squareSize)));
             this.activePiece = null;
-            this.redTurn = !this.redTurn;
         }
         this.repaint();
     }

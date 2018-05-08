@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 public class CheckersBoard extends JPanel{
     private static final Color LIGHT_BROWN = new Color(238, 238, 210);
     private static final Color DARK_BROWN = new Color(102, 51, 0);
-    private static final Color HIGHLIGHT = new Color(255, 251, 204);
+    private static final Color HIGHLIGHT = new Color(255, 255, 0, 192);
     private Rectangle[][] board = new Rectangle[8][8];
     private Rectangle[][] highlight = new Rectangle[8][8];
     private CheckersPiece[][] pieces = new CheckersPiece[8][8];
@@ -30,6 +30,7 @@ public class CheckersBoard extends JPanel{
     private double xOffset;
     private double yOffset;
     private boolean redTurn = true;
+    private boolean jumpContinue = false;
     
     public CheckersBoard() {
         this.addMouseListener(new MouseListener());
@@ -143,34 +144,25 @@ public class CheckersBoard extends JPanel{
         if(this.activePiece != null) {
             this.updateSquareSize();
             Point boardPoint = new Point((int) (point.getX() / this.squareSize), (int) (point.getY() / this.squareSize));
-            if(this.findMoves(this.activePiece).contains(boardPoint)) {
-                if((this.activePiece.isRed() && boardPoint.getY() == 0) || (this.activePiece.isRed() == false && boardPoint.getY() == 7)) {
-                    this.activePiece = new CheckersKing(this.activePiece, this.squareSize);
+            Move validMove = null;
+            for(Move move : this.findMoves(this.activePiece)) {
+                if(boardPoint.equals(move.getMove())) {
+                    validMove = move;
+                    break;
                 }
-                Point jumped = this.testForJump(this.activePiece.getBoardPoint(), boardPoint);
-                this.pieces[(int) this.activePiece.getBoardPoint().getY()][(int) this.activePiece.getBoardPoint().getX()] = null;
-                this.activePiece.setBoardPoint(boardPoint);
-                this.pieces[(int) this.activePiece.getBoardPoint().getY()][(int) this.activePiece.getBoardPoint().getX()] = this.activePiece;
-                if(jumped != null) {
-                    this.pieces[(int) jumped.getY()][(int) jumped.getX()] = null;
-                }
-                this.redTurn = !this.redTurn;
-            } else {
-                boardPoint = this.activePiece.getBoardPoint();
             }
-            this.activePiece.setLocation(new Point((int) (boardPoint.getX() * this.squareSize), (int) (boardPoint.getY() * this.squareSize)));
-            this.activePiece = null;
+            if(validMove != null) {
+                if(validMove.isJump()) {
+                    
+                }
+            } else {
+                
+            }
+            if(!this.jumpContinue) {
+                this.activePiece = null;
+            }
         }
         this.repaint();
-    }
-    
-    public Point testForJump(Point from, Point to) {
-        if(from.distance(to) > 2) {
-            int jumpedX = (int) (from.getX() - (from.getX() - to.getX()) / 2);
-            int jumpedY = (int) (from.getY() - (from.getY() - to.getY()) / 2);
-            return new Point(jumpedX, jumpedY);
-        }
-        return null;
     }
     
     public void highlightMoves(Point point) {
@@ -185,64 +177,66 @@ public class CheckersBoard extends JPanel{
             Arrays.fill(row, null);
         }
         if(movingPiece != null) {
-            List<Point> moves = this.findMoves(movingPiece);
-            for(Point move : moves) {
-                int x = (int) move.getX();
-                int y = (int) move.getY();
+            List<Move> moves = this.findMoves(movingPiece);
+            for(Move move : moves) {
+                int x = (int) move.getMove().getX();
+                int y = (int) move.getMove().getY();
                 this.highlight[y][x] = new Rectangle((int) this.squareSize * x, (int) this.squareSize * y, squareSize, squareSize);
             }
         }
         this.repaint();
     }
     
-    public List<Point> findMoves(CheckersPiece piece) {
+    public List<Move> findMoves(CheckersPiece piece) {
         int x = (int) piece.getBoardPoint().getX();
         int y = (int) piece.getBoardPoint().getY();
-        List<Point> moves = new ArrayList<Point>();
-        if(this.redTurn && piece.isRed()) {
-            if(x > 0 && y > 0 && this.pieces[y - 1][x - 1] == null) {
-                moves.add(new Point(x - 1, y - 1));
-            } else if(x > 1 && y > 1 && this.pieces[y - 1][x - 1] != null && this.pieces[y - 2][x - 2] == null && this.pieces[y - 1][x - 1].isRed() == false) {
-                moves.add(new Point(x - 2, y - 2));
-            }
-            if(x < 7 && y > 0 && this.pieces[y - 1][x + 1] == null) {
-                moves.add(new Point(x + 1, y - 1));
-            } else if(x < 6 && y > 1 && this.pieces[y - 1][x + 1] != null && this.pieces[y - 2][x + 2] == null && this.pieces[y - 1][x + 1].isRed() == false) {
-                moves.add(new Point(x + 2, y - 2));
-            }
-            if(piece instanceof CheckersKing) {
-                if(x > 0 && y < 7 && this.pieces[y + 1][x - 1] == null) {
-                    moves.add(new Point(x - 1, y + 1));
-                } else if(x > 1 && y < 6 && this.pieces[y + 1][x - 1] != null && this.pieces[y + 2][x - 2] == null && this.pieces[y + 1][x - 1].isRed() == false) {
-                    moves.add(new Point(x - 2, y + 2));
-                }
-                if(x < 7 && y < 7 && this.pieces[y + 1][x + 1] == null) {
-                    moves.add(new Point(x + 1, y + 1));
-                } else if(x < 6 && y < 6 && this.pieces[y + 1][x + 1] != null && this.pieces[y + 2][x + 2] == null && this.pieces[y + 1][x + 1].isRed() == false) {
-                    moves.add(new Point(x + 2, y + 2));
-                }
-            }
-        } else if(this.redTurn == false && piece.isRed() == false) {
-            if(x > 0 && y < 7 && this.pieces[y + 1][x - 1] == null) {
-                moves.add(new Point(x - 1, y + 1));
-            } else if(x > 1 && y < 6 && this.pieces[y + 1][x - 1] != null && this.pieces[y + 2][x - 2] == null && this.pieces[y + 1][x - 1].isRed()) {
-                moves.add(new Point(x - 2, y + 2));
-            }
-            if(x < 7 && y < 7 && this.pieces[y + 1][x + 1] == null) {
-                moves.add(new Point(x + 1, y + 1));
-            } else if(x < 6 && y < 6 && this.pieces[y + 1][x + 1] != null && this.pieces[y + 2][x + 2] == null && this.pieces[y + 1][x + 1].isRed()) {
-                moves.add(new Point(x + 2, y + 2));
-            }
-            if(piece instanceof CheckersKing) {
+        List<Move> moves = new ArrayList<Move>();
+        if(this.jumpContinue && piece.equals(this.activePiece)) {
+            if(this.redTurn && piece.isRed()) {
                 if(x > 0 && y > 0 && this.pieces[y - 1][x - 1] == null) {
-                    moves.add(new Point(x - 1, y - 1));
-                } else if(x > 1 && y > 1 && this.pieces[y - 1][x - 1] != null && this.pieces[y - 2][x - 2] == null && this.pieces[y - 1][x - 1].isRed()) {
-                    moves.add(new Point(x - 2, y - 2));
+                    moves.add(new Move(new Point(x - 1, y - 1), false));
+                } else if(x > 1 && y > 1 && this.pieces[y - 1][x - 1] != null && this.pieces[y - 2][x - 2] == null && this.pieces[y - 1][x - 1].isRed() == false) {
+                    moves.add(new Move(new Point(x - 2, y - 2), true));
                 }
                 if(x < 7 && y > 0 && this.pieces[y - 1][x + 1] == null) {
-                    moves.add(new Point(x + 1, y - 1));
-                } else if(x < 6 && y > 1 && this.pieces[y - 1][x + 1] != null && this.pieces[y - 2][x + 2] == null && this.pieces[y - 1][x + 1].isRed()) {
-                    moves.add(new Point(x + 2, y - 2));
+                    moves.add(new Move(new Point(x + 1, y - 1), false));
+                } else if(x < 6 && y > 1 && this.pieces[y - 1][x + 1] != null && this.pieces[y - 2][x + 2] == null && this.pieces[y - 1][x + 1].isRed() == false) {
+                    moves.add(new Move(new Point(x + 2, y - 2), true));
+                }
+                if(piece instanceof CheckersKing) {
+                    if(x > 0 && y < 7 && this.pieces[y + 1][x - 1] == null) {
+                        moves.add(new Move(new Point(x - 1, y + 1), false));
+                    } else if(x > 1 && y < 6 && this.pieces[y + 1][x - 1] != null && this.pieces[y + 2][x - 2] == null && this.pieces[y + 1][x - 1].isRed() == false) {
+                        moves.add(new Move(new Point(x - 2, y + 2), true));
+                    }
+                    if(x < 7 && y < 7 && this.pieces[y + 1][x + 1] == null) {
+                        moves.add(new Move(new Point(x + 1, y + 1), false));
+                    } else if(x < 6 && y < 6 && this.pieces[y + 1][x + 1] != null && this.pieces[y + 2][x + 2] == null && this.pieces[y + 1][x + 1].isRed() == false) {
+                        moves.add(new Move(new Point(x + 2, y + 2), true));
+                    }
+                }
+            } else if(this.redTurn == false && piece.isRed() == false) {
+                if(x > 0 && y < 7 && this.pieces[y + 1][x - 1] == null) {
+                    moves.add(new Move(new Point(x - 1, y + 1), false));
+                } else if(x > 1 && y < 6 && this.pieces[y + 1][x - 1] != null && this.pieces[y + 2][x - 2] == null && this.pieces[y + 1][x - 1].isRed()) {
+                    moves.add(new Move(new Point(x - 2, y + 2), true));
+                }
+                if(x < 7 && y < 7 && this.pieces[y + 1][x + 1] == null) {
+                    moves.add(new Move(new Point(x + 1, y + 1), false));
+                } else if(x < 6 && y < 6 && this.pieces[y + 1][x + 1] != null && this.pieces[y + 2][x + 2] == null && this.pieces[y + 1][x + 1].isRed()) {
+                    moves.add(new Move(new Point(x + 2, y + 2), true));
+                }
+                if(piece instanceof CheckersKing) {
+                    if(x > 0 && y > 0 && this.pieces[y - 1][x - 1] == null) {
+                        moves.add(new Move(new Point(x - 1, y - 1), false));
+                    } else if(x > 1 && y > 1 && this.pieces[y - 1][x - 1] != null && this.pieces[y - 2][x - 2] == null && this.pieces[y - 1][x - 1].isRed()) {
+                        moves.add(new Move(new Point(x - 2, y - 2), true));
+                    }
+                    if(x < 7 && y > 0 && this.pieces[y - 1][x + 1] == null) {
+                        moves.add(new Move(new Point(x + 1, y - 1), false));
+                    } else if(x < 6 && y > 1 && this.pieces[y - 1][x + 1] != null && this.pieces[y - 2][x + 2] == null && this.pieces[y - 1][x + 1].isRed()) {
+                        moves.add(new Move(new Point(x + 2, y - 2), true));
+                    }
                 }
             }
         }

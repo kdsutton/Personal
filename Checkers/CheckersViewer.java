@@ -13,7 +13,7 @@ public class CheckersViewer extends JFrame {
     public CheckersViewer() {
         this.setTitle("Checkers");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.add(new CheckersBoard());
+        this.add(new CheckersBoard(this));
         this.pack();
         this.setVisible(true);
     }

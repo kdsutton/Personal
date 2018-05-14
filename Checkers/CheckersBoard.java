@@ -1,5 +1,6 @@
 package Checkers;
 import java.util.Arrays;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -9,10 +10,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * Write a description of class CheckersBoard here.
@@ -24,6 +24,8 @@ public class CheckersBoard extends JPanel{
     private static final Color LIGHT_BROWN = new Color(238, 238, 210);
     private static final Color DARK_BROWN = new Color(102, 51, 0);
     private static final Color HIGHLIGHT = new Color(255, 255, 0, 192);
+    private static final Object[] VICTORY_OPTIONS = {"New Game", "Exit"};
+    private JFrame frame;
     private Rectangle[][] highlight = new Rectangle[8][8];
     private CheckersPiece[][] pieces = new CheckersPiece[8][8];
     private CheckersPiece activePiece;
@@ -34,7 +36,8 @@ public class CheckersBoard extends JPanel{
     private boolean jumpContinue;
     boolean gameOver;
     
-    public CheckersBoard() {
+    public CheckersBoard(JFrame jFrame) {
+        this.frame = jFrame;
         this.addMouseListener(new MouseListener());
         this.addMouseMotionListener(new MouseListener());
         this.setSize(800, 800);
@@ -65,9 +68,6 @@ public class CheckersBoard extends JPanel{
         this.redTurn = true;
         this.jumpContinue = false;
         this.gameOver = false;
-    }
-    
-    public void buttonPressed() {
     }
     
     public void updateSquareSize() {
@@ -307,7 +307,23 @@ public class CheckersBoard extends JPanel{
                 }
             }
         }
-        
+        if(redVictory) {
+            int n = JOptionPane.showOptionDialog(this.frame, "Red Wins!", "Victory", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+                                                 this.VICTORY_OPTIONS, this.VICTORY_OPTIONS[0]);
+            if(n == 0) {
+                this.setup();
+            } else if(n == 1) {
+                this.frame.dispose();
+            }
+        } else if(blackVictory) {
+            int n = JOptionPane.showOptionDialog(this.frame, "Black Wins!", "Victory", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+                                                 this.VICTORY_OPTIONS, this.VICTORY_OPTIONS[0]);
+            if(n == 0) {
+                this.setup();
+            } else if(n == 1) {
+                this.frame.dispose();
+            }
+        }
     }
     
     public class MouseListener implements MouseInputListener {
@@ -325,11 +341,6 @@ public class CheckersBoard extends JPanel{
         }
         public void mouseMoved(MouseEvent event) {
             highlightMoves(event.getPoint());
-        }
-    }
-    public class ButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            buttonPressed();
         }
     }
 }
